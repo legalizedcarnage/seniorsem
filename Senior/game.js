@@ -31,7 +31,7 @@ var img;
 var wall = [];
 var enems = [];
 function preload() {
-	img = loadImage('/Images/falcon.png');
+	//img = loadImage('/Images/falcon.png');
 }
 function setup() {
 	//image(img,width/2,height/2);
