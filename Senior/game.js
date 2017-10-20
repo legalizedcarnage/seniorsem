@@ -1,12 +1,18 @@
-
-function Structure() {
+function Structure(x,y) {
 	this.xvel=0;
 	this.yvel=0;
-	this.speed=1;
 	this.height=40;
 	this.width=40;
-	this.x=width/2+100;
-	this.y=height-this.height*2;
+	if (x===undefined)  {
+		this.x=width/2+100;
+	} else {
+		this.x=x;
+	}
+	if (y===undefined) {
+		this.y=height-this.height*2;
+	}else {
+		this.y=y;
+	}
 
 	this.show = function() {
 		rect(this.x,this.y,this.height*2,this.width*2);
@@ -17,79 +23,94 @@ function Structure() {
 		 && this.y+this.height*2 >= Player.y-Player.height
  		 && this.y <= Player.y+Player.height) {
 			//collision detected(needs improvement)
-			Player.xvel*=-1;
-			Player.yvel*=-1;
-			Player.x+=Player.xvel;
-			Player.y+=Player.yvel;
+			if(abs(this.x+this.width-Player.x) >abs(this.y+this.height-Player.y)) {
+				if(this.x+this.width-Player.x>0) {//left
+					Player.x=this.x-Player.width;
+				}
+				else if(this.x+this.width-Player.x<0) {//right
+					Player.x=this.x+this.width*2+Player.width;
+				}
+			} else {
+				
+				Player.yvel*=-1;
+				Player.y+=Player.yvel;
+			}			
 		}
 	}
 }
-var p1;
-var img;
+var p1, wep, img, gameState, level, currentLevel;
 var wall = [];
 var enems = [];
 function preload() {
-	try{
-		//img = loadImage('Images/falcon.png');
-	} catch(err) {
-
-	}
+	//img = loadImage('Images/falcon.png');
+	
 }
 function setup() {
 	//image(img,width/2,height/2);
-	createCanvas(1200,800);
-	p1 = new Player();
-	wep = new Sword();
-	wall.push(new Structure());
-	enems.push(new Player(0,height-40));
-	enems[0].speed=5;
+	createCanvas(1600,800);
+	gameState=1;
+	level=-1;
+	currentLevel=0;	
 	grav = 1;
+	p1 = new Player(width/2,height-40,P1_s);
+	p1.player = true;
+	
 }
 
 function draw() {
-	//update functions
-	p1.yvel+=grav;
-	p1.update(); 
-	
-	for (var i=0; i<wall.length;i++) {//wall collision
-		wall[i].collision(p1);
-		for (var j=0; j < enems.length;j++) {
-			wall[i].collision(enems[j]);
+	if (gameState==2) {
+		//create menu draw, update, and init functions
+	}
+	else if(gameState==1) {
+		if(currentLevel != level) {
+			//init level
+			init(currentLevel);
+			level=currentLevel;
 		}
-	} 
-	for (var i=0; i<enems.length;i++) {//enemy collision
+		//update functions
+		p1.update(); 
 		
-		enems[i].ai(p1,1);
-		enems[i].yvel+=grav;
-		enems[i].update();
-		//p1.collision(enems[i]);
-	} 
-///start draw
-	//background
-	background(200);	
-	//Midground
-	for (var i=0; i<wall.length;i++) {//display walls
-		wall[i].show();	
+		for (let i=0; i<wall.length;i++) {//wall collision
+			wall[i].collision(p1);
+			for (let j=0; j < enems.length;j++) {
+				wall[i].collision(enems[j]);
+			}
+		} 
+		for (let i=0; i<enems.length;i++) {//enemy collision
+			if(frameCount % 2 == 0) {//activate enemy ai every 2 frames
+				enems[i].ai(p1,1);
+			}
+			enems[i].update();
+			p1.collision(enems[i]);
+		} 
+	///start draw
+		//background
+		background(200);	
+		//Midground
+		for (let i=0; i<wall.length;i++) {//display walls
+			wall[i].show();	
+		}
+		//foreground
+		p1.show();
+		//wep.show(p1);
+		for (let i=0; i<enems.length;i++) {//display enemies
+			enems[i].show();
+		}
+		//ui
+		p1.displayhealth();
+		p1.displayexp();
 	}
-	//foreground
-	p1.show();
-	//wep.show(p1);
-	for (var i=0; i<enems.length;i++) {//display enemies
-		enems[i].show();
-	}
-	//ui
-	p1.displayhealth();
 }
 
 function keyPressed(){
 	if (keyCode== 68) {//d
-		p1.xvel=p1.speed;
+		p1.xvel=p1.stats.speed;
 	}
 	else if (keyCode == 65) {//a
-		p1.xvel=-p1.speed;
+		p1.xvel=-p1.stats.speed;
 	}
 	else if (keyCode ==83) {//s
-		p1.yvel=p1.speed;
+		p1.yvel=p1.stats.speed;
 	}
 	else if (keyCode ==87) {//w
 		p1.jump();

@@ -1,7 +1,7 @@
 function Stats(atk,def,spd,spc) {
-    this.attack =atk;
-    this.defence=def;
-    this.speed =spd;
+    this.attack = atk;
+    this.defence= def;
+    this.speed = spd;
     this.special =spc;
 }
 //define stats
