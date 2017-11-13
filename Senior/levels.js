@@ -12,15 +12,12 @@ function init(level) {
     //can define stats for enemies in third paramater
     
     if (level==0) {
-        wep = new Sword();
         wall.push(new Structure());
         enems.push(new Player(0,height-40,Enemy1_s));
     }else if (level==1) {
-        wep = new Sword();
         wall.push(new Structure(width/2,height/2));
         enems.push(new Player(0,height-40,Enemy1_s));
     } else {
-        wep = new Sword();
         wall.push(new Structure());
         enems.push(new Player(0,height-40,Enemy1_s));
     }

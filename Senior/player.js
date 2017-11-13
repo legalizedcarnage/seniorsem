@@ -13,13 +13,16 @@ function Player(x,y,stats) {
 	this.yvel=0;
 	this.xvel=0;
 	this.jumps=0;
-	this.speed=1;
+	this.grounded=false;
 	this.height=40;
 	this.width=40;
 	this.exp=0;
+	this.coins=0;
 	this.level=1;
 	this.hit=false;
 	this.player=false;
+	this.jumpstate=0;
+	//this.wep = Sword();
 	if(x===undefined) {
 		this.x = width/2;
 	}else {
@@ -34,13 +37,15 @@ function Player(x,y,stats) {
 	this.items = [];
 	
 	this.show = function() {
+		imageMode(CENTER);
 		if(this.player==true) {
 			fill(255);//color of player circle
+			image(characterImg,this.x,this.y,this.height*2,this.width*2);
+		}else{
+			image(slimeImg,this.x,this.y,this.height*2,this.width*2);
 		}
-		ellipse(this.x,this.y,this.height*2,this.width*2);
+		//ellipse(this.x,this.y,this.height*2,this.width*2);
 		fill(0);//reset color
-		//imageMode(CENTER);
-		//image(img,this.x,this.y,this.height*2,this.width*2);
 	}
 	this.displayhealth = function() {
 		if (this.health <=0) {
@@ -66,14 +71,25 @@ function Player(x,y,stats) {
 
 		fill(0);
 	}
+	this.displaygold = function() {
+		text("Gold: ",width-350,30);
+		text(this.coins,width-300,30)
+	}
 	
 	this.bounds = function() {
   		if (this.y > height-this.height) {//grounded
     		this.y=height-this.height;
 			this.yvel=0;
+			this.grounded =true;
     		this.jumps=1;
  		}else if (this.y< this.height){//ceiling
 			this.y=this.height;
+			this.yvel=0;
+			this.jumps=0;
+		}
+		else{
+			this.jumps=0;
+			this.grounded=false;
 		}
 		if ( this.x>width-this.width) {//right
 			this.x=width-this.width;
@@ -95,6 +111,9 @@ function Player(x,y,stats) {
 		  
 	}
 	this.update = function() {
+		if(this.grounded==true){
+			this.jumps=1;
+		}
 		this.yvel+=grav;
 		this.x+=this.xvel;
 		this.y+=this.yvel;
@@ -104,6 +123,7 @@ function Player(x,y,stats) {
 		if(this.jumps>0) {
 			this.yvel=-this.stats.speed*3;
 			this.jumps=0;
+			this.grounded=false;
 		}
 	}
 	this.addItem = function(Item) {
@@ -113,9 +133,9 @@ function Player(x,y,stats) {
 		Sword.collision(Player);
 	}
 	this.ai = function(Player,type) {
-		if (type ==1) {//first ai type
+		if (type ==1) {//(standard following and walking)
 			if(dist(Player.x,Player.y,this.x,this.y) < 500 ) {//player detected
-				if(Player.x-this.x ==0){
+				if(Player.x==this.x){
 					this.xvel=0;
 				}
 				else {
@@ -127,8 +147,31 @@ function Player(x,y,stats) {
 			} else {
 				this.xvel=0;
 			}
-		} else if (type ==2) {
-			
+		} else if (type ==2) {//slime jumping
+			if(dist(Player.x,Player.y,this.x,this.y) < 500 ) {//player detected
+				if(this.grounded==true) {
+					this.xvel=0;
+					if(this.height>30 && this.jumpstate==0)
+						this.height-=.2;
+					else if(this.height<45){
+						this.height+=2;
+						this.jumpstate=1;
+					}else {
+						this.jumpstate=0;
+						this.height=40;
+						this.jump();
+					}
+				}else {
+					if (Player.x==this.x)
+						this.xvel=0;
+					else 
+						this.xvel = this.stats.speed*(Player.x-this.x)/abs(Player.x-this.x);
+				}
+			}else {
+				this.xvel=0;
+				this.height=40;
+			}
+				
 		} else if (type ==3) {
 
 		} else {
@@ -136,12 +179,14 @@ function Player(x,y,stats) {
 		}	
 
 	}
+
 	this.collision = function(Player) {
 		//if collided 
 		if (dist(this.x,this.y,Player.x,Player.y) <this.width+Player.width) {
 			if (this.hit==false) {
 				this.health--;
-				this.exp+=10;
+				Player.health--;
+				this.exp+=10;//remove after exp generation added				
 				this.hit=true;
 				setTimeout(function(p1) {
 					p1.hit=false;
