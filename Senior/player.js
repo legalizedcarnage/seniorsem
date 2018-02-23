@@ -2,15 +2,15 @@
 //possibly create new enemy class
 //create an attack
 //add a paramater for different images/animations
-function Player(x,y,w,h,stats,enemyID,sprite) {
+function Player(x,y,w,h,stats,playerID,sprite) {
 	if(stats===undefined) {
 		this.stats = new Stats();
 	}else {
 		this.stats = stats;
 	}
 	this.playerId;
-	this.health=5;
-	this.maxHealth = 5;
+	this.maxHealth = this.stats.hp;
+	this.health=this.maxHealth;
 	this.yvel=0;
 	this.xvel=0;
 	this.jumps=0;
@@ -27,16 +27,17 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 		this.WIDTH=w;
 	}
 	this.width=this.WIDTH;
+	this.dir = 0;
 	this.exp=0;
 	this.coins=0;
 	this.level=1;
 	this.hit=false;
 	this.interact=false;
 	
-	if(enemyID===undefined) {
+	if(playerID===undefined) {
 		this.playerId = 1;
 	}else {
-		this.playerId = enemyID;
+		this.playerId = playerID;
 	}
 	this.jumpstate=-1;
 	//this.wep = Sword();
@@ -52,12 +53,34 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 		this.y = y;
 	}
 	this.items = [];
+	//gear
+	this.helmet = helm1;
+	this.armor = armor1;
+	this.wep = sword1;
+	this.bow = arrow1;
+	//
 	
 	this.show = function() {
 		imageMode(CENTER);
 		if(this.playerId==0) {
-			fill(255);//color of player circle
-			image(characterImg,this.x,this.y,this.width*2,this.height*2);
+			if(this.attack==true){
+				
+			}
+			if(this.xvel==0){
+				let X = 15;
+				if (this.dir ==0) {
+					X = -15
+				}else {
+					X=15;
+				}
+				image(characterImg,this.x-X,this.y-15,this.width*2.5,this.height*2.5);
+			}else if(this.dir ==0) {
+				image(characterImgMoving,this.x+15,this.y-15,this.width*2.5,this.height*2.5);
+				characterImg = characterImgStill;
+			} else {
+				image(characterImgMovingR,this.x-15,this.y-15,this.width*2.5,this.height*2.5);
+				characterImg = characterImgStillR;	
+			}
 		}else{
 			if(sprite===undefined) {
 				image(slimeImg,this.x,this.y,this.width*2,this.height*2);
@@ -65,18 +88,24 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 				image(sprite,this.x,this.y,this.width*2,this.height*2);
 			}
 		}
-		//ellipse(this.x,this.y,this.height*2,this.width*2);
 		fill(0);//reset color
 	}
 	this.displayhealth = function() {
 		if(this.playerId==0){
-			if (this.health <=0) {//played died
-				console.log("you have died");
-			}
 			for (var i=0; i<this.health;i++)
 				ellipse(10+i*15,10,10,10);
+			if (this.health <=0) {//played died
+				//console.log("you have died");
+				alert("You have died");
+				p1.health=p1.maxHealth;
+				currentLevel=0; 
+				init(currentLevel);
+				level=currentLevel;
+			}
+			
 		}else {
 			fill(255,0,0);
+			rectMode(CORNER);
 			rect(this.x-this.width,this.y-this.height-15,this.WIDTH*2,10);
 			fill(0,255,0);
 			rect(this.x-this.width,this.y-this.height-15,this.WIDTH*2*this.health/5,10);
@@ -85,6 +114,7 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 	}	
 	this.displayexp = function () {
 		textSize(20);
+		rectMode(CORNER);
 		let baseExp = 150;
 		text("Level "+this.level,width-250,30);
 		text(""+this.exp+"/"+this.level*baseExp,width-140,50);
@@ -104,12 +134,39 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 		text(this.coins,width-300,30)
 	}
 	this.displayInv = function() {
-			var invImg; invImg =potionImg;
+		var invImg = 0; 
+		let j = 0;
 		for(let i = 0; i< inv.length;i++) {
-			if(inv[0].id ==1 ){
+			if(inv[i].id ==1 ){
 				invImg =potionImg;
+			}else{
+
 			}
-			image(invImg,width-500-(i*width/40),30,width/40,width/40);
+
+			if (invImg!=0) {
+				image(invImg,width-500-(j*width/40),30,width/40,width/40);
+				j++;
+			}
+			invImg=0;
+		}
+	}
+	this.inventory = function() {
+		fill(255);
+		rectMode(CENTER);
+		rect(width/2,height/2,500,500);
+		fill(0);
+		text("Inventory:", width/2-240,height/2-225);
+		
+		let i=0;
+		for(let i = 0; i< inv.length;i++) {
+			if(inv[i].id ==1 ){
+				invImg =potionImg;
+			}else if(inv[i].id ==100){
+				invImg =arrowImg;
+			}else if(inv[i].id ==101){
+				invImg =arrowImg;
+			}
+			image(invImg,width/2-225+i*width/40,height/2-200,width/40,width/40);
 		}
 	}
 	this.bounds = function() {
@@ -122,9 +179,9 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 			this.grounded =true;
     		this.jumps=1;
  		}else if (this.y< this.height){//ceiling
-			this.y=this.height;
-			this.yvel=0;
-			this.jumps=0;
+			//this.y=this.height;
+			//this.yvel=0;
+			//this.jumps=0;
 		}
 		else{
 			this.jumps=0;
@@ -136,6 +193,8 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 			if (this.playerId==0){
 				if(confirm("Continue to next area?")) {
 					currentLevel++;
+					this.x=this.width;
+					this.y=height-this.height;
 				}
 			}
 		}else if (this.x <this.width){//left
@@ -144,6 +203,8 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 			if (this.playerId==0){
 				if(confirm("Continue to next area?")) {
 					currentLevel--;
+					this.x=width-this.width;
+					this.y=height-this.height;
 				}
 			}
 		}
@@ -156,6 +217,12 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 		this.yvel+=grav;
 		this.x+=this.xvel;
 		this.y+=this.yvel;
+		if (this.xvel>0) {
+			this.dir=0;
+		}
+		else if (this.xvel<0) {
+			this.dir =1;
+		}
 		this.bounds();
 	}
 	this.jump = function() {
@@ -216,10 +283,11 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 				}
 			}
 				
-		} else if (type ==-1) {//npc
+		} else if (type <=-1) {//npc
 			if(dist(Player.x,Player.y,this.x,this.y) < 200 ){
 				if(Player.interact) {
 					gameState=3;
+					NPC = type;
 				}
 			}
 		} else {
@@ -232,8 +300,7 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 			if (dist(this.x,this.y,Player.x,Player.y) <this.width+Player.width) {
 				if (this.hit==false) {
 					this.health--;
-					Player.health--;
-					this.exp+=10;//remove after exp generation added				
+					Player.health--;				
 					this.hit=true;
 					setTimeout(function(Player) {
 						Player.hit=false;
@@ -241,60 +308,5 @@ function Player(x,y,w,h,stats,enemyID,sprite) {
 				}
 			}
 		}
-	}
-}
-function Sword(Stats) {
-	this.stats = Stats;
-	this.height = 80;
-	this.width = 20
-	this.x;
-	this.y;
-	this.rotation = 0;
-	this.swing=false;
-	this.show = function(Player) {
-		if(Player.xvel>0) {
-			this.x=Player.x+40;
-			this.y=Player.y-70;
-		}else {
-			this.x=Player.x-this.width-40;
-			this.y=Player.y-70;
-		}
-
-		fill(192,192,192);
-		noStroke();
-		push();
-		translate(this.x,this.y);
-		this.rotate();
-		rect(0,0, this.width, this.height);
-		pop();
-		fill(0)
-	}
-	this.rotate= function() {
-		if(this.swing==true) {
-			if (this.rotation > 90) {
-				this.rotation = 0;
-				this.swing=false;
-			} else {
-				
-				
-				//rotate(radians(this.rotation));
-				this.rotation+=5
-			}
-		}
-		//rotate(radians(180));
-		
-	}
-	this.collision = function(Player) {
-		if (this.x+this.width*2 >= Player.x-Player.width
-			&& this.x <= Player.x+Player.width
-			&& this.y+this.height*2 >= Player.y-Player.height
-			&& this.y <= Player.y+Player.height
-			&& Player.hit==false){
-				Player.hit=true;
-				Player.health--;
-				setTimeout(function(p1) {
-					Player.hit=false;
-				}, 1000,this);
-		}	
 	}
 }

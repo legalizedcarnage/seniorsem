@@ -1,11 +1,34 @@
-function generateItem(x,y,enemId) {
+function generateItem(x,y,playerId) {
 	items.push(new item(x,y,0));
 	//items.push(new item(x,y,0));
-	if(enemId == 2	) {
+	if(playerId == 2	) {
+		items.push(new item(x,y,1));
+		items.push(new item(x,y,100));
+	}
+	if(playerId == 3) {
 		items.push(new item(x,y,1));
 	}
 }
-
+/*Item ID's
+	0=coin
+	1=potion
+	100 = arrow1
+	101 = arrow2
+*/
+function itemID(id) {
+	let name =0;
+	if(id==0) {
+		name="coin";
+	}else if (id==1) {
+		name="potion";
+	}else if (id==100) {
+		name="arrow1";
+	}else if (id==101) {
+		name="arrow2";
+	}
+	return(name);
+	//return Array(name,stats,value);
+}
 function item(x,y,id,vel,stats,value) {
 	if(id===undefined){
 		this.id=0;
@@ -26,9 +49,9 @@ function item(x,y,id,vel,stats,value) {
 	}
 	this.width=width/50;
 	this.height=this.width;
-	if(vel===undefined){
+	if(vel===undefined || vel <0){
 		this.xvel = Math.floor((Math.random() * 5));
-		this.yvel = -10;
+		this.yvel = -20;
 	}else {
 		this.xvel=0;
 		this.yvel=0;
@@ -42,17 +65,20 @@ function item(x,y,id,vel,stats,value) {
 			this.value=value;
 		}
 	}
-    this.effect= function(){
+    this.effect= function(index){
+		console.log(this.id);
         if(this.id == 0) {//coin
 			//define function
-		}else if(this.id ==1) {
+		}else if(this.id ==1) {//health potion
 			if(p1.health < p1.maxHealth) {
 				p1.health+=2;
 				if(p1.health > p1.maxHealth) {
 					p1.health = p1.maxHealth;
 				}
-				inv.splice(0,1);
+				inv.splice(index,1);
 			}
+		}else {
+
 		}
 		
     }
@@ -93,6 +119,8 @@ function item(x,y,id,vel,stats,value) {
 				fill(0);*/
 			}else if (this.id==1) {
 				image(potionImg,this.x,this.y,this.width*2,this.height*2);
+			}else if (this.id==100 || this.id ==101) {
+				image(arrowImg,this.x,this.y,this.width*2,this.height*2);
 			}
 		}
 	}
