@@ -66,20 +66,23 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 			if(this.attack==true){
 				
 			}
+			
 			if(this.xvel==0){
 				let X = 15;
 				if (this.dir ==0) {
+					characterImg = characterImgStill;
 					X = -15
 				}else {
 					X=15;
+					characterImg = characterImgStillR;
 				}
 				image(characterImg,this.x-X,this.y-15,this.width*2.5,this.height*2.5);
 			}else if(this.dir ==0) {
 				image(characterImgMoving,this.x+15,this.y-15,this.width*2.5,this.height*2.5);
-				characterImg = characterImgStill;
+				
 			} else {
 				image(characterImgMovingR,this.x-15,this.y-15,this.width*2.5,this.height*2.5);
-				characterImg = characterImgStillR;	
+					
 			}
 		}else{
 			if(sprite===undefined) {
@@ -98,6 +101,8 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 				//console.log("you have died");
 				alert("You have died");
 				p1.health=p1.maxHealth;
+				p1.xvel=0;
+				p1.yvel=0;
 				currentLevel=0; 
 				init(currentLevel);
 				level=currentLevel;
@@ -178,7 +183,7 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 			this.yvel=0;
 			this.grounded =true;
     		this.jumps=1;
- 		}else if (this.y< this.height){//ceiling
+ 		}else if (this.y/sc< this.height){//ceiling
 			//this.y=this.height;
 			//this.yvel=0;
 			//this.jumps=0;
@@ -187,25 +192,25 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 			this.jumps=0;
 			this.grounded=false;
 		}
-		if ( this.x>width-this.width) {//right
-			this.x=width-this.width;
+		if (this.x/2>width-this.width) {//right
+			this.x=width*sc-this.width-40;
 			this.xvel=0;
 			if (this.playerId==0){
-				if(confirm("Continue to next area?")) {
+				//if(confirm("Continue to next area?")) {
 					currentLevel++;
 					this.x=this.width;
 					this.y=height-this.height;
-				}
+				//}
 			}
 		}else if (this.x <this.width){//left
 			this.x=this.width;
 			this.xvel=0;
 			if (this.playerId==0){
-				if(confirm("Continue to next area?")) {
+				//if(confirm("Continue to next area?")) {
 					currentLevel--;
-					this.x=width-this.width;
+					this.x=width*sc-this.width-40;
 					this.y=height-this.height;
-				}
+				//}
 			}
 		}
 		  
@@ -300,7 +305,7 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 			if (dist(this.x,this.y,Player.x,Player.y) <this.width+Player.width) {
 				if (this.hit==false) {
 					this.health--;
-					Player.health--;				
+					//Player.health--;				
 					this.hit=true;
 					setTimeout(function(Player) {
 						Player.hit=false;

@@ -5,6 +5,7 @@ var items = [];
 var inv = [];
 var arrows=[];
 var NPC;
+var sc = 2; //screenscale
 function preload() {
 	//load images
 	characterImgStill = loadGif('Images/image3.gif');
@@ -67,7 +68,7 @@ function draw() {
 			}
 			for(let j =0; j< arrows.length;j++) {
 				if(arrows[j].walls(wall[i])) {
-				arrows.splice(i,1);
+				arrows.splice(j,1);
 				}
 			}
 		} 
@@ -100,9 +101,33 @@ function draw() {
 		//background
 		imageMode(CORNER);
 		background(bg);	
+		push();
+		if(width/2-p1.x < 0){
+			//console.log("a");
+		}
+		if (p1.x-(width*sc-width/2)<0) {
+			//console.log("b");
+		}
+		console.log((width*sc-width/2));
+		//console.log(width/2-p1.x);
+		if(width/2-p1.x < 0 && p1.x-(width*sc-width/2)<0) {
+			translate((width/2-p1.x)/10,0);//height-p1.y-p1.height);
+		}else if (p1.x-(width*sc-width/2)>=0) {
+			translate((width/2-width*sc+width/2)/10,0);
+		}
 		//Midground
 		imageMode(CENTER);
-		image(fg,width/2,height/2,width,height);
+		image(fg,width/2,height/2,width*1.2,height);
+		
+		pop();
+		push();
+		if(width/2-p1.x < 0 && p1.x-(width*sc-width/2)<0) {
+			translate(width/2-p1.x,0);//height-p1.y-p1.height);
+		}else if (p1.x-(width*sc-width/2)>=0) {
+			translate(-width,0);
+		}
+
+		
 		for (let i=0; i<wall.length;i++) {//display walls
 			wall[i].show();	
 		}
@@ -124,6 +149,7 @@ function draw() {
 				image(zImg,enems[i].x,enems[i].y-enems[i].height*1.5,enems[i].width,enems[i].width);
 			}
 		}
+		pop();
 		//previously where UI was
 	if (gameState==2) {
 		textSize(30);
@@ -280,8 +306,7 @@ function keyPressed(){
 			gameState=1;
 		else 
 			gameState=2;
-	}
-		
+	}	
 	
 }
 function keyReleased(){

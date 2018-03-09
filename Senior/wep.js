@@ -54,10 +54,12 @@ function Sword(Stats) {
 	}
 }
 function generateArrow(mx,my) {//mouse coordinates
-    let mag = Math.sqrt((mx-p1.x)*(mx-p1.x) + (my-p1.y)*(my-p1.y));//magnitude
-    let xvel = (mx-p1.x)/mag;
-    let yvel = (my-p1.y)/mag;;//get unit vectors 
-    arrows.push(new arrow(xvel,yvel,arrow1));//apply force
+	let ax = width/2;
+	let ay = 4*height/5;
+    let mag = Math.sqrt((mx-ax)*(mx-ax) + (my-ay)*(my-ay));//magnitude
+    let xvel = (mx-ax)/mag;
+    let yvel = (my-ay)/mag;//get unit vectors 
+    arrows.push(new arrow(xvel,yvel,p1.bow));//apply force
 }
 function arrow(xvel,yvel,Stats) {
     this.stats = Stats;
@@ -88,7 +90,7 @@ function arrow(xvel,yvel,Stats) {
 				Player.health-=this.stats.attack;
 				setTimeout(function(p1) {
 					Player.hit=false;
-                }, 1000,this);
+                }, 500,this);
                 
 		}	
 	}
@@ -109,7 +111,7 @@ function arrow(xvel,yvel,Stats) {
  		}else if (this.y< this.height){//ceiling
 			return true;
 		}
-		if ( this.x>width-this.width) {//right
+		if ( this.x/sc>width-this.width) {//right
 			return true;
 		}else if (this.x <this.width){//left
 			return true;

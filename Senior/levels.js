@@ -1,5 +1,6 @@
 function init(level) {
-    //refreshes the screen
+	//refreshes the screen
+	
     if (wall.length>0||enems.length>0||items.length>0) {
         enems.splice(0,enems.length);
 		wall.splice(0,wall.length);
@@ -16,6 +17,7 @@ function init(level) {
 	//can define sprite in 7th
 	// item(x,y,id,vel,stats,value)
 	if (level== -1) {
+		sc=2;
 		bg = skyImg;
 		fg = treeImg;
 		for(let i = 0;i < 5;i++) {
@@ -43,6 +45,7 @@ function init(level) {
 		items.push(new item(width/2+700,height-200-500,0,0,0,5));
         enems.push(new Player(width/2,height-40,40,40,Enemy1_s,2));
 		enems.push(new Player(width,height-40,40,40,Enemy1_s,2));
+		enems.push(new Player(width*1.5,height-40,40,40,Enemy1_s,2));
 		
     }else if (level==2) {
 		bg = skyImg;

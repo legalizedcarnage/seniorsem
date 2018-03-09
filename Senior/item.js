@@ -36,7 +36,15 @@ function item(x,y,id,vel,stats,value) {
 		this.id = id;
 	}
 	this.value;
-	this.stats = stats;
+	if (stats===undefined) {
+		if(id===100) {
+			this.stats=arrow1;
+		}else if(id===101) {
+			this.stats=arrow2;
+		}
+	}else {
+		this.stats = stats;
+	}
 	if(x===undefined){
 		this.x = width/2;
 	}else {
@@ -100,8 +108,8 @@ function item(x,y,id,vel,stats,value) {
 		  this.y=this.height;
 		  this.yvel=0;
 		}
-	  	if ( this.x>width-this.width) {//right
-		  this.x=width-this.width;
+	  	if ( this.x/sc>width-this.width) {//right
+		  this.x=width*sc-this.width;
 		  this.xvel=0;
 	  	}else if (this.x <this.width){//left
 		  this.x=this.width;
