@@ -67,8 +67,8 @@ function arrow(xvel,yvel,Stats) {
 	this.width = 20
 	this.x = p1.x;
     this.y = p1.y;
-    this.xvel = xvel*this.stats.attack*20;
-    this.yvel = yvel*this.stats.attack*20;
+    this.xvel = xvel*(this.stats.attack+p1.stats.attack)*5;
+    this.yvel = yvel*(this.stats.attack+p1.stats.attack)*5;
     this.show = function() {
 		//image(arrowImg,this.x,this.y,this.width,this.height);
         rectMode(CENTER);

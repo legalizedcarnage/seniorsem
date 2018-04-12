@@ -74,7 +74,7 @@ function item(x,y,id,vel,stats,value) {
 		}
 	}
     this.effect= function(index){
-		console.log(this.id);
+		//console.log(this.id);
         if(this.id == 0) {//coin
 			//define function
 		}else if(this.id ==1) {//health potion
@@ -139,6 +139,39 @@ function item(x,y,id,vel,stats,value) {
 					Player.coins+=this.value;
 				}else {
 					inv.push(this);
+					//insert sort
+					let i=inv.length-1;
+					let k = i;
+					inv.forEach(function () {
+						if(i>0) {
+							if(inv[i].id>inv[k].id) {
+								let tmp = inv[i];
+								inv[i]=inv[k];
+								inv[k]=tmp;	
+								k=i;							}
+							i--;
+						}
+					});
+					//
+					//quick sort inventory
+					/*
+					let j =0;
+					inv.forEach(function () {
+						j=0;
+						inv.forEach(function() {
+							if(j<inv.length-1) {
+								console.log(inv[j].id + " " + inv[j+1].id);
+								if(inv[j].id > inv[j+1].id) {
+									let tmp = inv[j];
+									inv[j]=inv[j+1];
+									inv[j+1]=tmp;
+								}
+							}
+							j++;
+						});
+					});
+					*/
+					//
 				}
 				this.collected = true;
 				items.splice(index,1);

@@ -5,6 +5,7 @@ var items = [];
 var inv = [];
 var arrows=[];
 var NPC;
+var buy = true;
 var sc = 2; //screenscale
 function preload() {
 	//load images
@@ -14,15 +15,21 @@ function preload() {
 	characterImgMovingR = loadGif('Images/image4R.gif');
 	falconImg = loadImage('Images/falcon.png');
 	groundImg = loadImage('Images/ground.gif');
-	skyImg = loadImage('Images/sky2.jpg');
+	skyImg = loadImage('Images/sky3.png');
 	treeImg = loadImage('Images/trees.gif');
 	slimeImg = loadImage('Images/slime.png');
+	slime2Img = loadImage('Images/slimebunny.png');
 	moneyImg = loadImage('Images/money.png');
 	potionImg = loadImage('Images/healthPotion.png');
 	zImg = loadImage('Images/z.png');
 	blockImg = loadImage('Images/brick.jpg')
 	decorImg = loadImage('Images/grass.png');
 	arrowImg = loadImage('Images/arrow.png');
+	forestImg = loadImage('Images/forest.png');
+	finalImg = loadImage('Images/finalroom.png');
+	pilarImg = loadImage('Images/pillarr.png');
+	campImg = loadImage('Images/camp.png');
+
 	bg = skyImg;
 	fg = groundImg;
 	characterImg = characterImgStill;
@@ -108,7 +115,7 @@ function draw() {
 		if (p1.x-(width*sc-width/2)<0) {
 			//console.log("b");
 		}
-		console.log((width*sc-width/2));
+		//console.log((width*sc-width/2));
 		//console.log(width/2-p1.x);
 		if(width/2-p1.x < 0 && p1.x-(width*sc-width/2)<0) {
 			translate((width/2-p1.x)/10,0);//height-p1.y-p1.height);
@@ -152,9 +159,10 @@ function draw() {
 		pop();
 		//previously where UI was
 	if (gameState==2) {
-		textSize(30);
+		textSize(width/(1600/30));
 		text("Paused",width/2,height/2-250);
 		p1.inventory();
+		p1.showstats();
 		//create menu: draw, update, and init functions
 	}else if(gameState==3) {
 		npc();
@@ -167,7 +175,8 @@ function draw() {
 		p1.displayInv();
 }
 function displayarea() {
-	textSize(20);
+	
+	textSize(width/(1600/20));
 	text("Area: " + (currentLevel+1),width/2,30);
 }
 function npc() {
@@ -216,7 +225,7 @@ function shop(items) {
 	rect(width/2,height/2,width/2,height/2);
 	rectMode(CORNER);
 	fill(0);
-	textSize(20);
+	textSize(width/(1600/20));
 	text("Shop",width/2,height/2-height/4+30);
 	text("Gold: "+p1.coins,width/2-width/4,height/2-height/4+30);
 	
@@ -232,12 +241,16 @@ function shop(items) {
 				&& width/2-width/4+100 <= mouseX
 				&& height/2+i*30-15+25 >= mouseY
 				&& height/2+i*30-15 <= mouseY) {//mouse is in buy box
-					if(p1.coins>0) {//check if player has gold
-						p1.coins--;
-						inv.push(new item(0,0,items[i],0,0,0));
-						//add an item
-					}else {
-						console.log("Not enough gold");
+					if(buy == true) {
+						if(p1.coins>0) {//check if player has gold
+							p1.coins--;
+							inv.push(new item(0,0,items[i],0,0,0));
+							//add an item
+							buy=false;
+							setTimeout(function () {buy=true;},500);
+						}else {
+							console.log("Not enough gold");
+						}
 					}
 				}
 		}
@@ -248,7 +261,7 @@ function textbox(buffer) {
 	rectMode(CORNER);
 	rect(0,height-height/5,width,height/5);
 	fill(255);
-	textSize(30);
+	textSize(width/(1600/30));
 	
 	text(buffer,width/2,height-height/10);
 	fill(0);
@@ -299,12 +312,43 @@ function keyPressed(){
 			}
 		}
 	}
+	if(gameState==2) {
+		if (keyCode == 49) {//1
+			if(p1.levelpoints > 0 ) {
+				p1.stats.attack++;
+				p1.levelpoints--;
+			}
+		}else if (keyCode == 50) {//2
+			if(p1.levelpoints > 0 ) {
+				p1.stats.attack++;
+				p1.levelpoints--;
+			}
+		}else if (keyCode == 51) {//3
+			if(p1.levelpoints > 0 ) {
+				p1.stats.attack++;
+				p1.levelpoints--;
+			}
+		}else if (keyCode == 52) {//4
+			if(p1.levelpoints > 0 ) {
+				p1.stats.attack++;
+				p1.levelpoints--;
+			}
+		}else if (keyCode == 53) {//5
+			if(p1.levelpoints > 0 ) {
+				p1.stats.attack++;
+				p1.levelpoints--;
+			}
+		}
+	}
 	if(keyCode == 90) {//z
 			p1.interact =true;
 	}else if(keyCode == 27){//escape
 		if(gameState==2)
 			gameState=1;
-		else 
+		else if(gameState==3) {
+			gameState=1;
+			textState=0;
+		}else 
 			gameState=2;
 	}	
 	

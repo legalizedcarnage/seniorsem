@@ -43,7 +43,7 @@ function init(level) {
 		}
 		wall.push(new Structure(width/2+10*70,height-200-9*50))
 		items.push(new item(width/2+700,height-200-500,0,0,0,5));
-        enems.push(new Player(width/2,height-40,40,40,Enemy1_s,2));
+        enems.push(new Player(width/2,height-40,40,40,Enemy1_s,2,slime2Img));
 		enems.push(new Player(width,height-40,40,40,Enemy1_s,2));
 		enems.push(new Player(width*1.5,height-40,40,40,Enemy1_s,2));
 		
@@ -52,9 +52,24 @@ function init(level) {
 		fg = groundImg;
 		wall.push(new Structure(width/2,height/2+200,40,40));
         enems.push(new Player(width,height-40,40,60,Enemy1_s,-5,falconImg));
-    } else {
+    } else if(level==3){
 		bg = skyImg;
-		fg = groundImg;
+		fg = forestImg;
+        wall.push(new Structure());
+        enems.push(new Player(width,height-40,40,40,Enemy1_s,1));
+    }else if (level==4) {
+		bg = skyImg;
+		fg = campImg;
+		wall.push(new Structure(width/2,height/2+200,40,40));
+        enems.push(new Player(width,height-40,40,60,Enemy1_s,-5,falconImg));
+    }else if (level==5) {
+		bg = skyImg;
+		fg = pillarImg;
+		wall.push(new Structure(width/2,height/2+200,40,40));
+        enems.push(new Player(width,height-40,40,60,Enemy1_s,-5,falconImg));
+    }else {
+		bg = skyImg;
+		fg = finalImg;
         wall.push(new Structure());
         enems.push(new Player(width,height-40,40,40,Enemy1_s,1));
     }
@@ -91,8 +106,8 @@ function Structure(x,y,w,h) {
 	this.show = function() {
 		//rect(this.x,this.y,this.width*2,this.height*2);
 		imageMode(CORNER);
-		image(blockImg,this.x,this.y,this.width*2,this.height*2);
-		image(decorImg,this.x,this.y-this.height,this.width*2,this.height);
+		image(blockImg,this.x,this.y,this.width*2*width/1600,this.height*2*800/height);
+		image(decorImg,this.x,this.y-this.height,this.width*2*width/1600,this.height*800/height);
 	}
 	this.collision= function(Player) {
 		if (this.x+this.width*2 >= Player.x-Player.width
@@ -134,8 +149,9 @@ function Structure(x,y,w,h) {
 					Player.y=this.y+this.height*2+Player.height;
 					Player.yvel=0;
 				}
-			}else 
-				console.log(xdis-ydis);
+			}else {
+				//console.log(xdis-ydis);
+			}
 		}
 	}
 }

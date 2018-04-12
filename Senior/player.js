@@ -31,6 +31,7 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 	this.exp=0;
 	this.coins=0;
 	this.level=1;
+	this.levelpoints=0;
 	this.hit=false;
 	this.interact=false;
 	
@@ -68,20 +69,20 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 			}
 			
 			if(this.xvel==0){
-				let X = 15;
+				let X = width/100;
 				if (this.dir ==0) {
 					characterImg = characterImgStill;
-					X = -15
+					X = -width/100
 				}else {
-					X=15;
+					X=width/100;
 					characterImg = characterImgStillR;
 				}
-				image(characterImg,this.x-X,this.y-15,this.width*2.5,this.height*2.5);
+				image(characterImg,this.x-X,this.y-15,this.width*2.5*width/1600,this.height*2.5*800/height);
 			}else if(this.dir ==0) {
-				image(characterImgMoving,this.x+15,this.y-15,this.width*2.5,this.height*2.5);
+				image(characterImgMoving,this.x+width/100,this.y-height/50,this.width*2.5*width/1600,this.height*2.5*800/height);
 				
 			} else {
-				image(characterImgMovingR,this.x-15,this.y-15,this.width*2.5,this.height*2.5);
+				image(characterImgMovingR,this.x-width/100,this.y-height/50,this.width*2.5*width/1600,this.height*2.5*800/height);
 					
 			}
 		}else{
@@ -111,32 +112,35 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 		}else {
 			fill(255,0,0);
 			rectMode(CORNER);
-			rect(this.x-this.width,this.y-this.height-15,this.WIDTH*2,10);
+			text(this.level,this.x-this.width,this.y-this.height-height/50)
+			rect(this.x-this.width,this.y-this.height-height/50,this.WIDTH*2,10);
 			fill(0,255,0);
-			rect(this.x-this.width,this.y-this.height-15,this.WIDTH*2*this.health/5,10);
+			rect(this.x-this.width,this.y-this.height-height/50,this.WIDTH*2*this.health/5,10);
 			fill(0);//reset colors
 		}
 	}	
 	this.displayexp = function () {
-		textSize(20);
+		textSize(width/(1600/20));
 		rectMode(CORNER);
 		let baseExp = 150;
-		text("Level "+this.level,width-250,30);
-		text(""+this.exp+"/"+this.level*baseExp,width-140,50);
-		rect(width-180,10,150,20);
+		text("Level "+this.level,width-width/(1600/250),30);
+		text("Skill points available: "+this.levelpoints,width-width/(1600/600),30);
+		text(""+this.exp+"/"+this.level*baseExp,width-width/(1600/130),50);
+		rect(width-width/(1600/180),height/80,width/(1600/150),height/40);
 		fill(0);
 		if(this.exp>=this.level*baseExp) {
 			this.exp=0;
 			this.level++;
+			this.levelpoints++;
 		}
 		fill(255);
-		rect(width-180,10,this.exp/this.level,20);
+		rect(width-width/(1600/180),height/80,this.exp/this.level*width/1600,height/40);
 
 		fill(0);
 	}
 	this.displaygold = function() {
-		text("Gold: ",width-350,30);
-		text(this.coins,width-300,30)
+		text("Gold: ",width-width/(1600/350),height/(800/30));
+		text(this.coins,width-width/(1600/300),height/(800/30));
 	}
 	this.displayInv = function() {
 		var invImg = 0; 
@@ -149,7 +153,7 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 			}
 
 			if (invImg!=0) {
-				image(invImg,width-500-(j*width/40),30,width/40,width/40);
+				image(invImg,width/40+(j*width/40),height-height/15,width/40,width/40);
 				j++;
 			}
 			invImg=0;
@@ -173,6 +177,18 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 			}
 			image(invImg,width/2-225+i*width/40,height/2-200,width/40,width/40);
 		}
+	}
+	this.showstats = function() {
+		fill(255);
+		rectMode(CENTER);
+		rect(width/2+500,height/2,500,500);
+		fill(0);
+		text("Stats:", width/2-240+500,height/2-225);
+		text("Attack: "+p1.stats.attack, width/2-240+500,height/2-225+50);
+		text("Deffence: "+p1.stats.defence, width/2-240+500,height/2-225+100);
+		text("Speed: "+p1.stats.speed, width/2-240+500,height/2-225+150);
+		text("Special: "+p1.stats.special, width/2-240+500,height/2-225+200);
+		text("HP: "+p1.stats.hp, width/2-240+500,height/2-225+250);
 	}
 	this.bounds = function() {
   		if (this.y > height-this.height) {//grounded
