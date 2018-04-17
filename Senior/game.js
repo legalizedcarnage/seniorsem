@@ -27,7 +27,7 @@ function preload() {
 	arrowImg = loadImage('Images/arrow.png');
 	forestImg = loadImage('Images/forest.png');
 	finalImg = loadImage('Images/finalroom.png');
-	pilarImg = loadImage('Images/pillarr.png');
+	pillarImg = loadImage('Images/pillarr.png');
 	campImg = loadImage('Images/camp.png');
 
 	bg = skyImg;
@@ -163,6 +163,7 @@ function draw() {
 		text("Paused",width/2,height/2-250);
 		p1.inventory();
 		p1.showstats();
+		p1.equip();
 		//create menu: draw, update, and init functions
 	}else if(gameState==3) {
 		npc();
@@ -245,6 +246,22 @@ function shop(items) {
 						if(p1.coins>0) {//check if player has gold
 							p1.coins--;
 							inv.push(new item(0,0,items[i],0,0,0));
+							//insert sort
+							let j=inv.length-1;
+							let k = j-1;
+							inv.forEach(function () {
+								if(k>=0){
+									if(inv[j].id<inv[k].id) {
+										let tmp = inv[j];
+										inv[j]=inv[k];
+										inv[k]=tmp;					
+									}else {
+										k=0;
+									}
+									j--;
+									k--;
+								}
+							});
 							//add an item
 							buy=false;
 							setTimeout(function () {buy=true;},500);

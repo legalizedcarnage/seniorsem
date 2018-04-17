@@ -55,10 +55,10 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 	}
 	this.items = [];
 	//gear
-	this.helmet = helm1;
-	this.armor = armor1;
-	this.wep = sword1;
-	this.bow = arrow1;
+	this.helmet = 210; //helm1
+	this.armor = 200; //armor1
+	this.wep = 50;	//sword1
+	this.bow = 100;	//arrow1
 	//
 	
 	this.show = function() {
@@ -176,7 +176,13 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 				invImg =arrowImg;
 			}
 			image(invImg,width/2-225+i*width/40,height/2-200,width/40,width/40);
-		}
+			if (width/2-225+i*width/40+width/40 >= mouseX
+				&& width/2-225+i*width/40 <= mouseX
+				&& height/2-200+width/40 >= mouseY
+				&& height/2-200 <= mouseY) {
+					text(itemID(inv[i].id),width/2-225+i*width/40,height/2-200)
+				}
+			}
 	}
 	this.showstats = function() {
 		fill(255);
@@ -189,6 +195,17 @@ function Player(x,y,w,h,stats,playerID,sprite) {
 		text("Speed: "+p1.stats.speed, width/2-240+500,height/2-225+150);
 		text("Special: "+p1.stats.special, width/2-240+500,height/2-225+200);
 		text("HP: "+p1.stats.hp, width/2-240+500,height/2-225+250);
+	}
+	this.equip = function() {
+		fill(255);
+		rectMode(CENTER);
+		rect(width/2-500,height/2,500,500);
+		fill(0);
+		text("Equipment:", width/2-240-500,height/2-225);
+		text("Helmet: " + itemID(p1.helmet), width/2-240-500,height/2-225+50);
+		text("Armor: " +itemID(p1.armor), width/2-240-500,height/2-225+100);
+		text("Weapon: " + itemID(p1.wep), width/2-240-500,height/2-225+150);
+		text("Arrow: " + itemID(p1.bow), width/2-240-500,height/2-225+200);
 	}
 	this.bounds = function() {
   		if (this.y > height-this.height) {//grounded

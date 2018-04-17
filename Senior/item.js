@@ -12,8 +12,11 @@ function generateItem(x,y,playerId) {
 /*Item ID's
 	0=coin
 	1=potion
+	50 = sword1
 	100 = arrow1
 	101 = arrow2
+	200 = armor1
+	210 = helm1
 */
 function itemID(id) {
 	let name =0;
@@ -25,6 +28,12 @@ function itemID(id) {
 		name="arrow1";
 	}else if (id==101) {
 		name="arrow2";
+	}else if (id==210) {
+		name="helm1";
+	}else if (id==50) {
+		name="sword1";
+	}else if (id==200) {
+		name="armor1";
 	}
 	return(name);
 	//return Array(name,stats,value);
@@ -138,18 +147,21 @@ function item(x,y,id,vel,stats,value) {
 				if(this.id==0) {
 					Player.coins+=this.value;
 				}else {
-					inv.push(this);
 					//insert sort
-					let i=inv.length-1;
-					let k = i;
+					inv.push(this);
+					let j=inv.length-1;
+					let k = j-1;
 					inv.forEach(function () {
-						if(i>0) {
-							if(inv[i].id>inv[k].id) {
-								let tmp = inv[i];
-								inv[i]=inv[k];
-								inv[k]=tmp;	
-								k=i;							}
-							i--;
+						if(k>=0){
+							if(inv[j].id<inv[k].id) {
+								let tmp = inv[j];
+								inv[j]=inv[k];
+								inv[k]=tmp;					
+							}else {
+								k=0;
+							}
+							j--;
+							k--;
 						}
 					});
 					//

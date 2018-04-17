@@ -59,7 +59,7 @@ function generateArrow(mx,my) {//mouse coordinates
     let mag = Math.sqrt((mx-ax)*(mx-ax) + (my-ay)*(my-ay));//magnitude
     let xvel = (mx-ax)/mag;
     let yvel = (my-ay)/mag;//get unit vectors 
-    arrows.push(new arrow(xvel,yvel,p1.bow));//apply force
+    arrows.push(new arrow(xvel,yvel,statsID(p1.bow)));//apply force
 }
 function arrow(xvel,yvel,Stats) {
     this.stats = Stats;
