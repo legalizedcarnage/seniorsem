@@ -14,6 +14,8 @@ function preload() {
 	characterImgMoving = loadGif('Images/image4.gif');
 	characterImgMovingR = loadGif('Images/image4R.gif');
 	falconImg = loadImage('Images/falcon.png');
+	npcImg = loadImage('Images/goat.png');
+	npc2Img = loadImage('Images/goat2.png');
 	groundImg = loadImage('Images/ground.gif');
 	skyImg = loadImage('Images/sky3.png');
 	treeImg = loadImage('Images/trees.gif');
