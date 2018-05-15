@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<title>Password Reset</title>
+<head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<div id='navbar'>
+	
+</div>
+<br>
+<div id="status">
+</div>
+<div id="box" style="text-align:center">
+<form action="resetPass.php" method="POST" onsubmit="return checkFields()">
+	<label> </label><br>
+	<label>Pass key:</label><br>
+	<input class="key" name="key" type="text" required width="50px"><span id="tab"><input class="key" name="key2" type="text" required width="50px"></span><br>
+	<br>
+	<label>New Password:</label><br>
+	<input id="pass1" name="pass1" type="password" required><br>
+	<br>
+	<label>Re-input New Password:</label><br>
+	<input id="pass2" name="pass2" type="password" required><br>
+	<br>
+	<input align="left" type="submit" value="Submit">
+</form>
+<script>
+function checkFields()
+{
+	var key = document.getElementById("key").value;
+	var pswd1 = document.getElementById("pass1").value;
+	var pswd2 = document.getElementById("pass2").value;
+	
+	if(pswd1 != pswd2)
+	{
+		document.getElementById("status").innerHTML = "Passwords do not match";
+		document.getElementById("status").style.opacity = "0.8";
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+</script>
+</div>
+</div>
+</body>
+</html>

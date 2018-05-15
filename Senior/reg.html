@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+    <body>
+    
+        <div id='navbar'>
+            <a href='index.html' style='color:white;font-size:30px;'>Home</a>
+            <a href='login.html' style='color:white;font-size:30px;'>Login</a>
+        </div>
+        <br>
+        <div id='status'>
+        	
+        </div>
+        <div id='box' style="text-align:center">
+            <img src='Photos/logo.jpg' style='width:20%;height:20%;' align="center">
+            <br>
+            <h3 style ='text-align:center;'>
+        Register a New Account
+            </h3>
+                 <form  style="text-align:center" action="reg.php" onsubmit="return checkFields()" method="POST">
+        		<label>Username:</label>
+        		<input id="username" type="text" name="uname" required>
+        		<br><br>
+        		<label>Password:</label>
+        		<input id="pass1" type="password" name="pswd" required>
+        		<br><br>
+        		<label>Re-input Password:</label>
+        		<input id="pass2" type="password" name="pswd_confirm" required>
+        		<br><br>
+        		<label>Email:</label>
+        		<input id="email" type="email" name="mail" required>
+        		<br><br>
+        		<input type="submit" value="Register" onclick="return checkFields()">
+    		</form>        
+    		   </div> 
+<script>	
+	function checkFields()
+	{
+		var pswd = document.getElementById("pass1").value;
+		var pswd2 = document.getElementById("pass2").value;
+		var name = document.getElementById("username").value;
+		var mail = document.getElementById("email").value;
+		var flag = "";
+		var ok = "okay";
+		
+		if(document.getElementById("status").style.opacity > 0)
+		{
+			document.getElementById("status").innerHTML = "";
+			
+		}
+		if(pswd != pswd2)
+		{
+			document.getElementById("status").innerHTML = "Passwords do not match";
+			document.getElementById("status").style.opacity = "0.8";
+			document.getElementById("pass1").value = "";
+			document.getElementById("pass2").value = "";
+			
+			return false;
+		}
+		else if(pswd == name)
+		{
+			document.getElementById("status").innerHTML = "Password cannot be the same as Username";
+			document.getElementById("status").style.opacity = "0.8";
+			document.getElementById("pass1").value = "";
+			document.getElementById("pass2").value = "";
+			
+			return false;
+		}
+		
+		else
+		{
+			$.ajax({
+				type:	'GET',
+				url:	'reg.php',
+				data:	{
+						user: name,
+						email: mail
+					},
+				error:	function(xhr){
+							alert(xhr.status + " " + xhr.statusText);
+							},
+				async:		false,
+				success:	function(result)
+						{
+							if(result.localeCompare("b") < 0)
+							{
+								flag = true;
+							}
+							else
+							{
+								document.getElementById("status").innerHTML = result;
+								document.getElementById("status").style.opacity = "0.8";
+								document.getElementById("username").value = "";
+								document.getElementById("email").value = "";
+								document.getElementById("pass1").value = "";
+								document.getElementById("pass2").value = "";
+								flag = false;	
+							}
+							
+							
+						 }
+					
+				});
+				return flag;	
+		}
+
+	}
+	
+	
+</script>
+
+    </body>
+</html>
+
+

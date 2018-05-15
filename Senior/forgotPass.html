@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<title>Password retrieval</title>
+<head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<div id='navbar'>
+	<a href='../index.html' style='color:white;font-size:30px;'>Home</a>
+	or
+	<a href='../login.html' style='color:white;font-size:30px;'>Login</a>
+</div>
+<br>
+<div id='status'>
+</div>
+<div id="box" style="text-align:center">
+<form action="" method="POST" onsubmit="return checkFields()">
+	<label>An email will be sent to you with a link to reset your password</label><br>
+	<label>Username:</label><br>
+	<input id="user" name="user" type="text" required><br>
+	<br>
+	<input align="left" type="submit" value="Submit">
+</form>
+<script>
+function checkFields()
+{
+	var user = document.getElementById("user").value;
+	var flag = "";
+	$.ajax({
+		type: 		'POST',
+		url:		'checkPass.php',
+		data:		{
+					uname: user
+				},
+		error:		function(xhr){
+					alert(xhr.status + " " + xhr.statusText);
+						},
+		async:		false,
+		success:	function(result){
+					if(result.localeCompare("b") < 0)
+							{
+								flag = true;
+							}
+							else
+							{
+								document.getElementById("status").innerHTML = result;
+								document.getElementById("status").style.opacity = "0.8";
+								document.getElementById("user").value = "";
+								flag = false;	
+							}
+					}
+	});
+	return flag;
+}
+</script>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<title>Login to Antem-Online</title>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id='navbar'>
+            <a href='index.html' style='color:white;font-size:30px;'>Home</a>
+        </div>
+        <br>
+        <div id='status'>
+        </div>
+        <div id='box' style='text-align:center'>
+            <img src='Photos/logo.jpg' style='width:20%;height:20%;'>
+            <br>
+            <h3 >Login
+            </h3>
+            <form id='login' style='color:black;font-size:15px;' action="" onsubmit="return checkFields()" method="POST">
+                <label>Username:</label>
+                <input id="username" type='text' name='username' required>
+                <br><br>
+                <label>Password:<label>
+                <input id="pswd" type='password' name='pswd' required>
+                <br><br>
+                <input type='submit' value='Submit'>
+                <br><br>
+                <a href='retrievals/forgotUser.html'>Forgot Username?</a>
+                <br>
+                <a href='retrievals/forgotPass.html'>Forgot Password?</a>
+                <br>
+                <a href='reg.html' align="center">Not a user? Register</a>
+                <br>
+            </form>
+        </div>
+        <script>
+        function checkFields()
+	{
+		var pswd = document.getElementById("pswd").value;
+		var name = document.getElementById("username").value;
+		var flag = "";
+		
+			$.ajax({
+				type:	'POST',
+				url:	'auth.php',
+				data:	{
+						user: name,
+						pass: pswd
+					},
+				error:	function(xhr){
+							alert(xhr.status + " " + xhr.statusText);
+							},
+				async:		false,
+				success:	function(result)
+						{
+							if(result.localeCompare("b") < 0)
+							{
+								document.getElementById("login").action = "http://antem-online.net/game.html?user="+name;
+								flag = true;
+							}
+							else
+							{
+								document.getElementById("status").innerHTML = result;
+								document.getElementById("status").style.opacity = "0.8";
+								document.getElementById("username").value = "";
+								document.getElementById("pswd").value = "";
+								flag = false;	
+							}
+							
+						 }
+					
+				});
+				return flag;	
+	}
+        </script>
+    </body>
+    
+</html>
